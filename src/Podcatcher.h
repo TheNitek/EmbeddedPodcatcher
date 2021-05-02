@@ -10,7 +10,7 @@ typedef std::function<void(const char *url, const char *guid)> EpisodeCallback;
 
 class Podcatcher {
   public:
-    void begin(EpisodeCallback cb);
+    void begin(EpisodeCallback &cb);
     void processChar(const char ch);
     void reset();
   private:

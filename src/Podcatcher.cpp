@@ -1,6 +1,6 @@
 #include <Podcatcher.h>
 
-void Podcatcher::begin(EpisodeCallback cb) {
+void Podcatcher::begin(EpisodeCallback &cb) {
   _cb = cb;
   XMLcallback xmlCb = std::bind(&Podcatcher::_xmlCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5);
   _xml.init((uint8_t *)_buffer, sizeof(_buffer), xmlCb);
