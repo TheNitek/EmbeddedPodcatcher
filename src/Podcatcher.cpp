@@ -8,7 +8,7 @@ void Podcatcher::begin(EpisodeCallback &cb) {
 
 void Podcatcher::_xmlCallback(const uint8_t statusflags, char* tagName,
  const uint16_t tagNameLen, const char* data, const uint16_t dataLen) {
-  if(statusflags & STATUS_ERROR) {
+  if(statusflags & XML_STATUS_ERROR) {
     tagName[tagNameLen] = '\0';
     /*Serial.print(tagName);
     Serial.print(" ");
@@ -17,17 +17,17 @@ void Podcatcher::_xmlCallback(const uint8_t statusflags, char* tagName,
     return;
   }
 
-  if((statusflags & STATUS_END_TAG) && (strcasecmp(tagName, "/rss") == 0)) {
+  if((statusflags & XML_STATUS_END_TAG) && (strcasecmp(tagName, "/rss") == 0)) {
     _isDone = true;
     return;
   }
 
-  if((statusflags & STATUS_END_TAG) && strcasecmp(tagName, "/rss/channel/item") == 0) {
+  if((statusflags & XML_STATUS_END_TAG) && strcasecmp(tagName, "/rss/channel/item") == 0) {
     _withinItemTag = false;
     return;
   }
 
-  if(statusflags & STATUS_START_TAG) {
+  if(statusflags & XML_STATUS_START_TAG) {
     if (strcasecmp(tagName, "/rss/channel/item") == 0) {
       _withinItemTag = true;
       _withinEnclosureTag = false;
@@ -44,7 +44,7 @@ void Podcatcher::_xmlCallback(const uint8_t statusflags, char* tagName,
     return;
   }
 
-  if(_withinEnclosureTag && (statusflags & STATUS_ATTR_TEXT)) {
+  if(_withinEnclosureTag && (statusflags & XML_STATUS_ATTR_TEXT)) {
     if(strcasecmp(tagName, "url") == 0) {
       strncpy(_url, data, MAX_PODCAST_URL_LENGTH);
     } else if(strcasecmp(tagName, "type") == 0 && strcasecmp(data, "audio/mpeg") == 0) {
@@ -52,7 +52,7 @@ void Podcatcher::_xmlCallback(const uint8_t statusflags, char* tagName,
     }
   }
 
-  if((statusflags & STATUS_TAG_TEXT) && (strcasecmp(tagName, "/rss/channel/item/guid") == 0)) {
+  if((statusflags & XML_STATUS_TAG_TEXT) && (strcasecmp(tagName, "/rss/channel/item/guid") == 0)) {
     strncpy(_guid, data, MAX_PODCAST_GUID_LENGTH);
   }
 
